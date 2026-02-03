@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spendza App</title>
+
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma;}
+body{
+  margin:0;
+  background:#ffffff;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+/* -------- Splash Screen -------- */
+.splash{
+  text-align:center;
+  animation:fadeIn 1.2s ease-in-out;
+  padding:20px;
+}
+.logo-box{
+  width:130px;height:130px;
+  background:#fff7f0;border-radius:28px;
+  margin:0 auto 25px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 30px rgba(252,128,25,0.25);
+}
+.logo-box svg{width:70px;height:70px;fill:#FC8019;}
+.app-name{font-size:40px;font-weight:800;color:#FC8019;}
+.divider{
+  width:60px;height:4px;background:#FC8019;
+  margin:15px auto;border-radius:4px;
+}
+.tagline{color:#555;margin-bottom:20px;}
+.info-card{
+  background:#fff;padding:18px;border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+  text-align:center;
+}
+
+/* -------- Login -------- */
+.container{
+  width:320px;padding:30px;border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
+  text-align:center;display:none;
+}
+h2{color:#fc8019;}
+input{
+  width:95%;padding:10px;margin-top:10px;
+  border-radius:8px;border:1px solid #ccc;
+  text-align:center;
+}
+button{
+  width:100%;padding:10px;border:none;
+  border-radius:8px;margin-top:15px;
+  background:#fc8019;color:white;font-size:16px;
+}
+.signup-text{margin-top:12px;}
+.signup-text span{color:#fc8019;font-weight:bold;cursor:pointer;}
+.msg{margin-top:10px;font-weight:bold;}
+
+/* -------- Signup -------- */
+.signup-container{
+  width:340px;padding:30px;border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+  display:none;
+  text-align:center;
+}
+.logo{text-align:center;font-size:32px;font-weight:bold;color:#FC8019;}
+.subtitle{text-align:center;color:#666;margin-bottom:20px;}
+
+label{
+  font-weight:600;
+  display:block;
+  text-align:center;
+}
+
+.signup-container input{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  text-align:center;
+}
+
+.btn{
+  width:100%;padding:14px;background:#FC8019;
+  border:none;border-radius:8px;color:#fff;font-size:16px;
+}
+.login-link{text-align:center;margin-top:10px;}
+.login-link span{color:#FC8019;font-weight:bold;cursor:pointer;}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SPLASH PAGE -->
+<div id="splash" class="splash">
+  <div class="logo-box">
+    <svg viewBox="0 0 64 64">
+      <path d="M54 16H44l-6-10H26l-6 10H10a2 2 0 0 0-2 2v34a4 4 0 0 0 4 4h40a4 4 0 0 0 4-4V18a2 2 0 0 0-2-2z"/>
+    </svg>
+  </div>
+  <div class="app-name">Spendza</div>
+  <div class="divider"></div>
+  <div class="tagline">Smart Grocery Expense Calculator</div>
+  <div class="info-card">
+    Track your monthly grocery budget and manage your money smarter!
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="login" class="container">
+  <h2>Spendza</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+
+  <div class="signup-text">
+    Don’t have an account? <span onclick="showSignup()">Sign up</span>
+  </div>
+
+  <div id="msg" class="msg"></div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signup" class="signup-container">
+  <div class="logo">Spendza</div>
+  <div class="subtitle">Create your account</div>
+
+  <label>Email</label>
+  <input type="email" id="email" placeholder="Enter email">
+
+  <label>Password</label>
+  <input type="password" id="spass" placeholder="Create password">
+
+  <button class="btn" onclick="createAccount()">Create Account</button>
+
+  <div id="signupMsg" class="msg"></div>
+
+  <div class="login-link">
+    Already have an account?
+    <span onclick="showLogin()">Login</span>
+  </div>
+</div>
+
+<script>
+// Show Login after splash
+setTimeout(()=>{
+  document.getElementById("splash").style.display="none";
+  document.getElementById("login").style.display="block";
+},2000);
+
+function showSignup(){
+  document.getElementById("login").style.display="none";
+  document.getElementById("signup").style.display="block";
+}
+
+function showLogin(){
+  document.getElementById("signup").style.display="none";
+  document.getElementById("login").style.display="block";
+}
+
+function login(){
+  let user=document.getElementById("username").value;
+  let pass=document.getElementById("password").value;
+  let msg=document.getElementById("msg");
+
+  if(user=="" || pass==""){
+    msg.style.color="red";
+    msg.innerHTML="Please fill all fields!";
+  }
+  else if(user=="admin" && pass=="1234"){
+    msg.style.color="green";
+    msg.innerHTML="Login Successful!";
+
+    // ✅ ONLY ADDED LINE
+    window.location.href = "project page2.html";
+  }
+  else{
+    msg.style.color="red";
+    msg.innerHTML="Invalid Username or Password!";
+  }
+}
+
+function createAccount(){
+  let email = document.getElementById("email").value;
+  let pass = document.getElementById("spass").value;
+  let sMsg = document.getElementById("signupMsg");
+
+  if(email=="" || pass==""){
+    sMsg.style.color="red";
+    sMsg.innerHTML="Please fill all fields!";
+  } else{
+    sMsg.style.color="green";
+    sMsg.innerHTML="Account Created Successfully!";
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Management Website</title>
+
+<style>
+body{
+ margin:0;
+ font-family:Segoe UI,Arial;
+ background:white;
+}
+
+/* Navbar */
+nav{
+ background:#fc8019;
+ padding:10px;
+ text-align:center;
+}
+
+nav button{
+ background:white;
+ border:none;
+ padding:10px 15px;
+ margin:5px;
+ border-radius:6px;
+ color:#fc8019;
+ font-weight:600;
+ cursor:pointer;
+}
+
+nav button:hover{
+ background:#ffe6d0;
+}
+
+/* Sections */
+.section{
+ display:none;
+ padding:0;
+}
+
+/* Success message */
+#successMsg{
+ text-align:center;
+ color:green;
+ font-weight:600;
+ margin-top:15px;
+ display:none;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+ <button onclick="show('meal')">Meal Planner</button>
+ <button onclick="show('grocery')">Grocery List</button>
+ <button onclick="show('recipe')">Recipe Generator</button>
+ <button onclick="show('budget')">Budget Planner</button>
+<button onclick="show('logout')">Logout</button>
+
+</nav>
+
+
+<!-------------------- MEAL PLANNER -------------------->
+<div id="meal" class="section">
+
+<header style="background:#ff8c00;color:white;padding:20px;text-align:center;">
+    <h1>Weekly Meal Planner</h1>
+    <p>Plan your meals with a healthy foods</p>
+</header>
+
+<div style="padding:30px;">
+    <h2 style="color:#ff8c00;margin-bottom:10px;">Meal Schedule</h2>
+
+    <table style="width:100%;border-collapse:collapse;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+
+        <tr>
+            <th style="background:#ffa94d;color:white;padding:12px;">Day</th>
+            <th style="background:#ffa94d;color:white;padding:12px;">Breakfast</th>
+            <th style="background:#ffa94d;color:white;padding:12px;">Lunch</th>
+            <th style="background:#ffa94d;color:white;padding:12px;">Dinner</th>
+        </tr>
+
+        <script>
+            let days=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+            document.write(days.map(d=>`
+            <tr>
+            <td style='border:1px solid #ffd8b1;padding:10px;text-align:center;'>${d}</td>
+            <td style='border:1px solid #ffd8b1;padding:10px;text-align:center;'><input class="mealInput" style='width:90%;padding:6px;border:1px solid #ffb366;border-radius:4px;'></td>
+            <td style='border:1px solid #ffd8b1;padding:10px;text-align:center;'><input class="mealInput" style='width:90%;padding:6px;border:1px solid #ffb366;border-radius:4px;'></td>
+            <td style='border:1px solid #ffd8b1;padding:10px;text-align:center;'><input class="mealInput" style='width:90%;padding:6px;border:1px solid #ffb366;border-radius:4px;'></td>
+            </tr>`).join(""));
+        </script>
+
+    </table>
+
+    <center>
+        <button onclick="saveMealPlan()" style="margin-top:20px;padding:10px 20px;background:#ff8c00;color:white;border:none;border-radius:5px;font-size:16px;cursor:pointer;">Save Meal Plan</button>
+    </center>
+
+    <p id="successMsg">Planned meal saved successfully ✔️</p>
+</div>
+
+<footer style="margin-top:30px;text-align:center;color:#ff8c00;">
+    <p>© 2025 Meal Planner</p>
+</footer>
+
+</div>
+
+
+
+<!-------------------- GROCERY LIST -------------------->
+<div id="grocery" class="section">
+
+<header style="background:#fc8019;color:white;padding:10px;text-align:center;">
+    <h1>🛒 Grocery List</h1>
+    <p>Save your daily groceries</p>
+</header>
+
+<div style="max-width:500px;margin:30px auto;background:white;padding:20px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);">
+
+    <div style="display:flex;gap:10px;">
+        <input id="itemInput" placeholder="Enter grocery item" style="flex:1;padding:10px;border:2px solid #fc8019;border-radius:5px;font-size:16px;">
+        <button onclick="addItem()" style="padding:10px 15px;border:none;border-radius:5px;background:#fc8019;color:white;font-size:16px;">Add</button>
+    </div>
+
+    <ul id="list" style="list-style:none;padding:0;margin-top:20px;"></ul>
+</div>
+
+<script>
+let list=document.getElementById("list");
+let items=JSON.parse(localStorage.getItem("grocery"))||[];
+
+function displayItems(){
+ list.innerHTML="";
+ items.forEach((item,index)=>{
+ list.innerHTML+=`
+ <li style="display:flex;justify-content:space-between;background:#fff7ed;padding:10px;margin-bottom:10px;border-radius:5px;border-left:5px solid #fc8019;">
+ <span>${item}</span>
+ <button onclick="deleteItem(${index})" style="background:#ff5252;border:none;color:white;padding:5px 10px;border-radius:5px;">X</button>
+ </li>`;
+ });
+}
+
+function addItem(){
+ let input=document.getElementById("itemInput");
+ if(input.value.trim()==="")return;
+ items.push(input.value);
+ localStorage.setItem("grocery",JSON.stringify(items));
+ input.value="";
+ displayItems();
+}
+
+function deleteItem(i){
+ items.splice(i,1);
+ localStorage.setItem("grocery",JSON.stringify(items));
+ displayItems();
+}
+displayItems();
+</script>
+
+</div>
+
+
+
+<!-------------------- RECIPE GENERATOR -------------------->
+<div id="recipe" class="section">
+
+<div style="width:100%;max-width:450px;margin:40px auto;padding:30px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+  <div style="text-align:center;font-size:28px;font-weight:bold;color:#FC8019;">Recipe Generator</div>
+  <div style="text-align:center;color:#666;margin-bottom:25px;">Enter ingredients you have at home</div>
+
+  <label style="font-size:14px;font-weight:600;">Available Ingredients</label>
+  <textarea id="ingredients" style="width:100%;height:100px;padding:12px;border-radius:10px;border:1px solid #ddd;"></textarea>
+
+  <button onclick="generateRecipe()" style="width:100%;margin-top:20px;padding:14px;border:none;border-radius:10px;background:#FC8019;color:#fff;font-size:16px;font-weight:bold;">Generate Recipe</button>
+
+  <div id="result" style="margin-top:25px;background:#fff7f0;border-left:4px solid #FC8019;padding:15px;border-radius:10px;display:none;">
+    <h3 id="recipeName" style="color:#FC8019;"></h3>
+    <p id="recipeDetails"></p>
+  </div>
+</div>
+
+<script>
+function generateRecipe(){
+ const input=document.getElementById("ingredients").value.toLowerCase();
+ const resultBox=document.getElementById("result");
+ const name=document.getElementById("recipeName");
+ const details=document.getElementById("recipeDetails");
+
+ if(!input.trim()){alert("Please enter some ingredients!");return;}
+
+ if(input.includes("rice") && input.includes("egg")){
+ name.innerText="🍳 Egg Fried Rice";
+ details.innerText="Cook rice, scramble eggs, sauté onions and veggies, mix with spices.";
+ }
+ else if(input.includes("potato")){
+ name.innerText="🥔 Spiced Potato Fry";
+ details.innerText="Slice potatoes, fry with spices until crispy.";
+ }
+ else if(input.includes("bread")){
+ name.innerText="🍞 Bread Toast";
+ details.innerText="Toast bread with butter and enjoy.";
+}
+else if(input.includes("spices")){
+name.innerText="Briyani";
+details.innerText="Add spices,fry with oil and enjoy briyani.";
+ }
+else if(input.includes("chilli sauce")){
+name.innerText="Noodles";
+details.innerText="Noodles with veggie is ready to serve.";
+ }
+else if(input.includes("rava")){
+name.innerText="Upma";
+details.innerText="Healthy food to serve with sugar.";
+ }
+else if(input.includes("Cabbage")){
+name.innerText="Sandwitch";
+details.innerText="Sandwitch with high protien.";
+ }
+else if(input.includes("pepper")){
+name.innerText="Rasam";
+details.innerText="key digestion food with more spices is ready to taste";
+ }
+ else{
+ name.innerText="🍲 Simple Veg Stir Fry";
+ details.innerText="Chop veggies, cook with oil and spices.";
+ }
+ resultBox.style.display="block";
+}
+</script>
+
+</div>
+
+
+
+<!-------------------- BUDGET PLANNER -------------------->
+<div id="budget" class="section">
+
+<div style="width:100%;max-width:500px;margin:30px auto;padding:30px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.1);">
+  <div style="text-align:center;font-size:28px;font-weight:bold;color:#FC8019;">Budget Planner</div>
+  <div style="text-align:center;color:#666;margin-bottom:25px;">Food expenses with carry-forward</div>
+
+  <label>Previous Month Remaining (₹)</label>
+  <input type="number" id="prevRemaining" placeholder="Enter remaining amount" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;">
+
+  <label>Current Month Salary / Budget (₹)</label>
+  <input type="number" id="currentBudget" placeholder="Enter current month salary" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;">
+
+  <button onclick="setCurrentBudget()" style="width:100%;padding:14px;background:#FC8019;border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:bold;cursor:pointer;">Start Budget</button>
+
+  <div style="margin-top:25px;padding-top:20px;border-top:1px solid #eee">
+    <label>Food Expense Amount (₹)</label>
+    <input type="number" id="expenseAmount" placeholder="Enter expense amount" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;">
+    <button onclick="addExpense()" style="width:100%;padding:14px;background:#FC8019;border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:bold;">Add Expense</button>
+  </div>
+
+  <div style="background:#fff7f0;border-left:4px solid #FC8019;padding:15px;border-radius:10px;margin-top:20px">
+    <p>Total Budget: ₹ <span id="totalBudget">0</span></p>
+    <p>Total Spent: ₹ <span id="totalSpent">0</span></p>
+    <p>Remaining: ₹ <span id="remaining" style="color:green;">0</span></p>
+  </div>
+
+  <div style="margin-top:25px;padding-top:20px;border-top:1px solid #eee">
+    <label>Next Month Salary (₹)</label>
+    <input type="number" id="nextMonthBudget" placeholder="Enter next month salary" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;">
+    <button onclick="calculateNextMonth()" style="width:100%;padding:14px;background:#FC8019;border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:bold;">Calculate Next Month Budget</button>
+
+    <div id="nextMonthSummary" style="display:none;background:#fff7f0;border-left:4px solid #FC8019;padding:15px;border-radius:10px;margin-top:20px">
+      <p>Carry Forward: ₹ <span id="carryForward">0</span></p>
+      <p>Total Next Month Budget: ₹ <span id="finalNextMonthBudget">0</span></p>
+    </div>
+  </div>
+</div>
+
+<script>
+let totalBudget=0;
+let totalSpent=0;
+
+function setCurrentBudget(){
+ const prev=Number(prevRemaining.value)||0;
+ const current=Number(currentBudget.value)||0;
+ totalBudget=prev+current;
+ totalSpent=0;
+ updateUI();
+}
+
+function addExpense(){
+ const amount=Number(expenseAmount.value);
+ if(amount<=0){alert("Enter valid expense");return;}
+ totalSpent+=amount;
+ expenseAmount.value="";
+ updateUI();
+}
+
+function updateUI(){
+ totalBudgetEl.innerText=totalBudget;
+ totalSpentEl.innerText=totalSpent;
+ const remaining=totalBudget-totalSpent;
+ remainingEl.innerText=remaining;
+ remainingEl.style.color=remaining>=0?"green":"red";
+}
+
+function calculateNextMonth(){
+ const base=Number(nextMonthBudget.value);
+ const remaining=totalBudget-totalSpent;
+ const carry=Math.max(0,remaining);
+ if(base<=0){alert("Enter next month salary");return;}
+ carryForward.innerText=carry;
+ finalNextMonthBudget.innerText=base+carry;
+ nextMonthSummary.style.display="block";
+}
+
+const totalBudgetEl=document.getElementById("totalBudget");
+const totalSpentEl=document.getElementById("totalSpent");
+const remainingEl=document.getElementById("remaining");
+</script>
+
+</div>
+<!-------------------- LOGOUT PAGE -------------------->
+<div id="logout" class="section">
+
+  <div style="
+    max-width:360px;
+    margin:120px auto;
+    padding:30px;
+    text-align:center;
+    background:#ffffff;
+    border-radius:16px;
+    box-shadow:0 12px 30px rgba(252,128,25,0.3);
+  ">
+
+    <h1 style="
+      color:#FC8019;
+      font-size:36px;
+      font-weight:800;
+      margin-bottom:8px;
+    ">
+      Spendza
+    </h1>
+
+    <div style="
+      width:60px;
+      height:4px;
+      background:#FC8019;
+      margin:12px auto 20px;
+      border-radius:4px;
+    "></div>
+
+    <p style="color:#555;font-size:16px;">
+      You have been logged out successfully 👋
+    </p>
+
+    <p style="color:#777;font-size:14px;">
+      Login again to continue managing your meals
+    </p>
+
+    <button onclick="loginAgain()" style="
+      margin-top:25px;
+      padding:12px 26px;
+      background:#FC8019;
+      color:white;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+    ">
+      Login Again
+    </button>
+
+  </div>
+
+</div>
+
+
+
+
+<!-------------------- EXTRA SCRIPTS -------------------->
+<script>
+function show(id){
+ document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+ document.getElementById(id).style.display="block";
+}
+show('meal');
+
+function saveMealPlan(){
+ let inputs=document.querySelectorAll(".mealInput");
+ let filled=false;
+
+ inputs.forEach(i=>{
+  if(i.value.trim()!=="") filled=true;
+ });
+
+ if(!filled){
+  alert("Please fill at least one meal before saving!");
+  return;
+ }
+
+ document.getElementById("successMsg").style.display="block";
+}
+function loginAgain(){
+  window.location.href = "loginn.html";
+}
+
+</script>
+
+</body>
+</html>
